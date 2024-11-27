@@ -159,3 +159,109 @@ iface eth1 inet static
 auto eth0
 iface eth0 inet dhcp
 ```
+
+## .bashrc + routing
+### NewEridu
+```
+#A2
+route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.218
+
+#A3
+route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.218
+
+#A4
+route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.218
+
+#A7
+route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.222
+
+#A8
+route add -net 192.246.2.128 netmask 255.255.255.192 gw 192.246.2.222
+
+#A9
+route add -net 192.246.2.208 netmask 255.255.255.248 gw 192.246.2.222
+```
+
+### LuminaSquare
+```
+#A3
+route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.195
+
+#A7
+route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.217
+
+#A8
+route add -net 192.246.2.128 netmask 255.255.255.192 gw 192.246.2.217
+
+#A9
+route add -net 192.246.2.208 netmask 255.255.255.248 gw 192.246.2.217
+```
+
+### BalletTwins
+```
+#A4
+route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.193
+
+#A7
+route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.193
+
+#A8
+route add -net 192.246.2.128 netmask 255.255.255.192 gw 192.246.2.193
+
+#A9
+route add -net 192.246.2.208 netmask 255.255.255.248 gw 192.246.2.193
+```
+
+### SixStreet
+```
+#A2
+route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.221
+
+#A3
+route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.221
+
+#A4
+route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.221
+
+#A7
+route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.203
+
+#A8
+route add -net 192.246.2.128 netmask 255.255.255.192 gw 192.246.2.202
+```
+
+### OuterRing
+```
+#A2
+route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.201
+
+#A3
+route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.201
+
+#A4
+route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.201
+
+#A7
+route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.203
+
+#A9
+route add -net 192.246.2.208 netmask 255.255.255.248 gw 192.246.2.201
+```
+
+### ScootOutpost
+```
+#A2
+route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.201
+
+#A3
+route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.201
+
+#A4
+route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.201
+
+#A8
+route add -net 192.246.2.128 netmask 255.255.255.192 gw 192.246.2.202
+
+#A9
+route add -net 192.246.2.208 netmask 255.255.255.248 gw 192.246.2.201
+```
