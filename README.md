@@ -173,6 +173,9 @@ route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.218
 #A4
 route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.218
 
+#A6
+route add -net 192.246.2.200 netmask 255.255.255.248 gw 192.246.2.222
+
 #A7
 route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.222
 
@@ -407,7 +410,7 @@ service apache2 start
 echo '<?php
 $hostname = gethostname();
 echo "Welcome to $hostname";
-?>' > /var/www/html/index.html
+?>' > /var/www/html/index.php
 
 service apache2 restart
 ```
