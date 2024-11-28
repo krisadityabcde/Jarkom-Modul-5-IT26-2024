@@ -2,7 +2,7 @@
 **Salsabila Rahmah (5027231005)** <br>
 **Rafael Ega Krisaditya (5027231025)**
 ## Topologi Jaringan dan Pembagian Subnet
-![Topologi Jaringan](./Topologi.jpg)
+![Topologi Jaringan](./Images/Topologi.jpg)
 
 ## Spreadsheet Pembagian IP Subnet
 [Spreadsheet Pembagian IP Subnet](https://docs.google.com/spreadsheets/d/1RsyGUHDkX6PORwnmuhoLswWwZUOwpgX8823EpeLFQxM/edit?usp=sharing)
@@ -332,7 +332,7 @@ echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 ```bash
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
-apt-get install isc-dhcp-server -y
+apt-get install isc-dhcp-server netcat -y
 
 echo 'INTERFACESv4="eth0"' > /etc/default/isc-dhcp-server
 
@@ -381,7 +381,7 @@ service isc-dhcp-server restart
 ```bash
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
-apt-get install bind9 -y
+apt-get install bind9 netcat -y
 
 echo 'options {
         directory "/var/cache/bind";
@@ -407,10 +407,7 @@ apt-get install apache2 -y
 
 service apache2 start
 
-echo '<?php
-$hostname = gethostname();
-echo "Welcome to $hostname";
-?>' > /var/www/html/index.php
+echo 'Welcome to {hostname}' > /var/www/html/index.html
 
 service apache2 restart
 ```
@@ -421,4 +418,68 @@ service apache2 restart
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source [IP eth0]
 ```
 
-2. 
+2. Agar tidak ada node yang bisa ping ke Fairy tapi Fairy tetap bisa ping ke node lain, lakukan konfigurasi berikut di Fairy
+```bash
+# Blokir semua ping yang ditujukan ke Fairy
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+
+#Perbolehkan ping yang berasal dari Fairy
+iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+```
+![Misi 2.2.1](./Images/Misi%202-2-1.png)
+
+![Misi 2.2.2](./Images/Misi%202-2-2.png)
+
+![Misi 2.2.3](./Images/Misi%202-2-3.png)
+
+Hapus aturan dengan
+```bash
+iptables -D INPUT -p icmp --icmp-type echo-request -j DROP
+iptables -D OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+```
+
+3. Agar HDD hanya bisa diakses oleh Fairy, lakukan konfigurasi berikut di HDD
+```bash
+#Izinkan koneksi dari Fairy
+iptables -A INPUT -s 192.246.2.211 -j ACCEPT
+
+#Tolak semua koneksi dari sumber lain
+iptables -A INPUT -j REJECT
+```
+
+Lakukan pengujian dengan menggunakan netcat
+```bash
+#Pada HDD
+nc -l -p 1234
+
+#Pada Fairy
+nc 192.246.2.210 1234
+```
+![Misi 2.3.1](./Images/Misi%202-3-1.png)
+
+![Misi 2.3.2](./Images/Misi%202-3-2.png)
+
+![Misi 2.3.3](./Images/Misi%202-3-3.png)
+Seharusnya koneksi yang berasal dari Fairy akan diterima sedangkan koneksi dari sumber lain akan langsung ditolak
+
+4. HollowZero hanya bisa diakses oleh 4 node dan hanya di hari Senin hingga Jumat, gunakan konfigurasi ini di HollowZero
+
+```bash
+iptables -A INPUT -p tcp -s <IP_Burnice> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A INPUT -p tcp -s <IP_Caesar> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A INPUT -p tcp -s <IP_Jane> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A INPUT -p tcp -s <IP_Policeboo> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A INPUT -p tcp --dport 80 -j REJECT
+```
+
+Lalu gunakan command berikut untuk verifikasi akses
+```bash
+curl http://192.246.2.226
+```
+![Misi 2.4.1](./Images/Misi%202-4-1.png)
+
+![Misi 2.4.2](./Images/Misi%202-4-2.png)
