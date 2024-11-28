@@ -45,8 +45,8 @@ iface eth1 inet static
 #A4
 auto eth2
 iface eth2 inet static
-	address 192.246.0.1
-	netmask 255.255.254.0
+	address 192.246.1.1
+	netmask 255.255.255.0
 ```
 
 ### BalletTwins
@@ -171,7 +171,7 @@ route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.218
 route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.218
 
 #A4
-route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.218
+route add -net 192.246.1.0 netmask 255.255.255.0 gw 192.246.2.218
 
 #A6
 route add -net 192.246.2.200 netmask 255.255.255.248 gw 192.246.2.222
@@ -221,7 +221,7 @@ service isc-dhcp-relay restart
 ### BalletTwins (DHCP Relay)
 ```bash
 #A4
-route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.193
+route add -net 192.246.1.0 netmask 255.255.255.0 gw 192.246.2.193
 
 #A7
 route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.193
@@ -255,7 +255,7 @@ route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.221
 route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.221
 
 #A4
-route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.221
+route add -net 192.246.1.0 netmask 255.255.255.0 gw 192.246.2.221
 
 #A7
 route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.203
@@ -286,7 +286,7 @@ route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.201
 route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.201
 
 #A4
-route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.201
+route add -net 192.246.1.0 netmask 255.255.255.0 gw 192.246.2.201
 
 #A7
 route add -net 192.246.2.224 netmask 255.255.255.252 gw 192.246.2.203
@@ -317,7 +317,7 @@ route add -net 192.246.2.192 netmask 255.255.255.248 gw 192.246.2.201
 route add -net 192.246.2.0 netmask 255.255.255.128 gw 192.246.2.201
 
 #A4
-route add -net 192.246.0.0 netmask 255.255.254.0 gw 192.246.2.201
+route add -net 192.246.1.0 netmask 255.255.255.0 gw 192.246.2.201
 
 #A8
 route add -net 192.246.2.128 netmask 255.255.255.192 gw 192.246.2.202
@@ -334,7 +334,7 @@ echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
 apt-get install isc-dhcp-server -y
 
-echo 'INTERFACES="eth0"' > /etc/default/isc-dhcp-server
+echo 'INTERFACESv4="eth0"' > /etc/default/isc-dhcp-server
 
 echo '#A8
 subnet 192.246.2.128 netmask 255.255.255.192 {
@@ -347,9 +347,9 @@ subnet 192.246.2.128 netmask 255.255.255.192 {
 }
 
 #A4
-subnet 192.246.0.0 netmask 255.255.254.0 {
-        range 192.246.0.2 192.246.1.254;
-        option routers 192.246.0.1;
+subnet 192.246.1.0 netmask 255.255.255.0 {
+        range 192.246.1.2 192.246.1.254;
+        option routers 192.246.1.1;
         option broadcast-address 192.246.1.255;
         option domain-name-servers 192.246.2.210;
         default-lease-time 600;
