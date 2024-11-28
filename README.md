@@ -139,6 +139,7 @@ iface eth0 inet static
 
 ### Fairy
 ```
+auto eth0
 iface eth0 inet static
 	address 192.246.2.211
 	netmask 255.255.255.248
@@ -147,8 +148,8 @@ iface eth0 inet static
 
 ### HollowZero
 ```
-auto eth1
-iface eth1 inet static
+auto eth0
+iface eth0 inet static
 	address 192.246.2.226
 	netmask 255.255.255.252
     gateway 192.246.2.225
@@ -343,7 +344,7 @@ subnet 192.246.2.128 netmask 255.255.255.192 {
 }
 
 #A4
-subnet 192.246.2.0 netmask 255.255.254.0 {
+subnet 192.246.0.0 netmask 255.255.254.0 {
         range 192.246.0.2 192.246.1.254;
         option routers 192.246.0.1;
         option broadcast-address 192.246.1.255;
