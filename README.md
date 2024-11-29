@@ -403,7 +403,7 @@ service bind9 restart
 ```bash
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
-apt-get install apache2 -y
+apt-get install apache2 netcat -y
 
 service apache2 start
 
@@ -483,3 +483,62 @@ curl http://192.246.2.226
 ![Misi 2.4.1](./Images/Misi%202-4-1.png)
 
 ![Misi 2.4.2](./Images/Misi%202-4-2.png)
+
+5. Konfigurasi agar HIA hanya bisa diakses oleh Ellen dan Lycaon pada pukul 08:00 - 21:00 dan bisa diakses oleh Jane serta Policeboo hanya pada pukul 03:00 - 23:00
+```bash
+# Akses Node Ellen dan Lycaon (08:00 - 21:00)
+iptables -A INPUT -p tcp -s <IP Ellen> --dport 80 -m time --timestart 01:00 --timestop 14:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+
+iptables -A INPUT -p tcp -s <IP Lycaon> --dport 80 -m time --timestart 01:00 --timestop 14:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+
+# Akses Node Jane dan Policeboo (03:00 - 23:00)
+iptables -A INPUT -p tcp -s <IP Jane> --dport 80 -m time --timestart 20:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+
+iptables -A INPUT -p tcp -s <IP Policeboo> --dport 80 -m time --timestart 20:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+
+# Tolak semua koneksi lainnya
+iptables -A INPUT -p tcp --dport 80 -j REJECT
+```
+
+Catatan: Karena konfigurasi iptables menggunakan format waktu UTC atau GMT 0, maka waktu harus disesuaikan dengan permintaan soal dan perbedaan waktunya (WIB = GMT +7)
+
+![Misi 2.5.1](./Images/Misi%202-5-1.png)
+
+![Misi 2.5.2](./Images/Misi%202-5-2.png)
+
+![Misi 2.5.3](./Images/Misi%202-5-3.png)
+
+6. Aktivitas di HIA harus dibatasi, HIA harus memblokir aktivitas port scanning yang melebihi 25 port dalam rentang 10 detik, penyerang yang diblokir tidak bisa ping, nc, atau curl ke HIA, log dari iptables akan tercatat untuk analisis.
+
+```bash
+# Atur rate limit untuk port scanning (maksimum 25 koneksi per 10 detik)
+iptables -N PORTSCAN
+iptables -A INPUT -p tcp --dport 1:100 -m state --state NEW -m recent --set --name portscan
+iptables -A INPUT -p tcp --dport 1:100 -m state --state NEW -m recent --update --seconds 10 --hitcount 25 --name portscan -j PORTSCAN
+
+# Blokir IP yang terdeteksi melakukan port scanning tidak wajar
+iptables -A PORTSCAN -m recent --set --name blacklist
+iptables -A PORTSCAN -j DROP
+
+# Blokir semua aktivitas dari IP yang ada di daftar blacklist
+iptables -A INPUT -m recent --name blacklist --rcheck -j REJECT
+iptables -A OUTPUT -m recent --name blacklist --rcheck -j REJECT
+
+# Logging untuk port scanning
+iptables -A PORTSCAN -j LOG --log-prefix='PORT SCAN DETECTED' --log-level 4
+```
+
+Lakukan simulasi scan port dengan `nmap -p 1-100 192.246.2.194`
+
+Setelah itu lakukan pengujian terhadap node yang diblokir, apakah masih bisa melakukan transmisi dengan node HIA (ping, curl, nc)
+![Misi 2.6.1](./Images/Misi%202-6-1.png)
+
+![Misi 2.6.2](./Images/Misi%202-6-2.png)
+
+![Misi 2.6.3](./Images/Misi%202-6-3.png)
+
+![Misi 2.6.4](./Images/Misi%202-6-4.png)
+
+![Misi 2.6.5](./Images/Misi%202-6-5.png)
+
+![Misi 2.6.6](./Images/Misi%202-6-6.png)
