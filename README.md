@@ -542,3 +542,36 @@ Setelah itu lakukan pengujian terhadap node yang diblokir, apakah masih bisa mel
 ![Misi 2.6.5](./Images/Misi%202-6-5.png)
 
 ![Misi 2.6.6](./Images/Misi%202-6-6.png)
+
+7. Pada HollowZero ada ketentuan bahwa hanya ada 2 koneksi aktif dari 2 IP berbeda dalam waktu bersamaan yang diperbolehkan, maka dari itu gunakan konfigurasi berikut di HollowZero
+```bash
+# Hanya izinkan maksimal 2 koneksi aktif dari 2 IP berbeda
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --set
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 3 -j REJECT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+```
+
+Lakukan pengujian bersamaan di 4 Node dengan `parallel curl -s http://IP-HollowZero ::: IP-Caesar IP-Burnice IP-Jane IP-Policeboo`
+
+![Misi 2.7.1](./Images/Misi%202-7-1.png)
+
+8. Agar setiap paket yang dikirimkan ke Burnice dapat dialihkan ke HollowZero, maka lakukan konfigurasi berikut pada Burnice
+```bash
+iptables -t nat -A PREROUTING -p tcp -j DNAT --to-destination 192.246.2.226 --dport 8080
+iptables -A FORWARD -p tcp -d 192.246.2.226 -j ACCEPT
+```
+
+Gunakan nc pada node manapun dan arahkan ke Burnice, seharusnya Burnice tidak akan menerima apapun karena semua paket tcp dialihkan ke HollowZero. Untuk melakukan verifikasi di HollowZero bisa dengan menggunakan tcpdump seperti ini `tcpdump -i eth0 host 192.246.2.211 and port 8080`
+
+![Misi 2.8.1](./Images/Misi%202-8-1.png)
+
+## Misi 3
+Untuk memblokir semua transmisi masuk maupun keluar dari Burnice bisa memanipulasi policy iptables seperti ini
+```bash
+iptables --policy INPUT DROP
+iptables --policy OUTPUT DROP
+iptables --policy FORWARD DROP
+```
+
+![Misi 3.1](./Images/Misi%203-1.png)
+![Misi 3.2](./Images/Misi%203-2.png)
