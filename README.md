@@ -4,6 +4,10 @@
 ## Topologi Jaringan dan Pembagian Subnet
 ![Topologi Jaringan](./Images/Topologi.jpg)
 
+## Tree
+![treejarkom5](https://github.com/user-attachments/assets/ce44a401-9009-4893-9ceb-6e7dcf8f1228)
+
+
 ## Spreadsheet Pembagian IP Subnet
 [Spreadsheet Pembagian IP Subnet](https://docs.google.com/spreadsheets/d/1RsyGUHDkX6PORwnmuhoLswWwZUOwpgX8823EpeLFQxM/edit?usp=sharing)
 
