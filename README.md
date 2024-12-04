@@ -579,3 +579,7 @@ iptables --policy FORWARD DROP
 
 ![Misi 3.1](./Images/Misi%203-1.png)
 ![Misi 3.2](./Images/Misi%203-2.png)
+
+
+## Revisi
+[Revisi Jarkom 5 IT26](https://youtu.be/adriQqodQEI)
